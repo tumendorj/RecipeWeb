@@ -1,5 +1,20 @@
-let person = {
-  name: "tumendorj",
-  age: 21
-};
-export default person;
+require("@babel/polyfill");
+import axios from "axios";
+
+class Search {
+  constructor(query) {
+    this.query = query;
+  }
+  async doSearch() {
+    try {
+      let result = await axios(
+        "https://forkify-api.herokuapp.com/api/search?q=" + this.query
+      );
+      this.result = result.data.recipes;
+      return this.result;
+    } catch (error) {
+      alert("алдаа : " + errors);
+    }
+  }
+}
+export default Search;
