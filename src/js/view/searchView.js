@@ -10,7 +10,7 @@ export const renderRecipe = recipe => {
   //   publisher_url: "http://allrecipes.com";
   const markup = `
      <li>
-        <a class="results__link results__link--active" href="#${recipe.recipe_id}">
+        <a class="results__link" href="#${recipe.recipe_id}">
             <figure class="results__fig">
                 <img src="${recipe.image_url}" alt="Test">
             </figure>
@@ -23,14 +23,39 @@ export const renderRecipe = recipe => {
     `;
   elements.resultList.insertAdjacentHTML("beforeend", markup);
 };
-export const renderRecipes = recipes => {
-  recipes.forEach(el => {
+const createButton = (page, type, direct) => {
+  return `<button class="btn-inline results__btn--${type}" data-goto = ${page}>
+  <svg class="search__icon">
+      <use href="img/icons.svg#icon-triangle-${direct}"></use>
+  </svg>
+  <span>Хуудас ${page}</span>
+</button>`;
+};
+const renderButtons = (currentPage, totalPages) => {
+  let button;
+  if (currentPage == 1 && totalPages > 1) {
+    button = createButton(2, "next", "right");
+  } else if (currentPage < totalPages) {
+    button = createButton(currentPage - 1, "prev", "left");
+    button += createButton(currentPage + 1, "next", "right");
+  } else if (currentPage == totalPages) {
+    button = createButton(currentPage - 1, "prev", "left");
+  }
+  elements.pageButtons.insertAdjacentHTML("afterbegin", button);
+};
+export const renderRecipes = (recipes, currentPage = 1, resperPage = 10) => {
+  const start = (currentPage - 1) * resperPage;
+  const end = currentPage * resperPage;
+  recipes.slice(start, end).forEach(el => {
     renderRecipe(el);
   });
+  const totalPages = Math.ceil(recipes.length / resperPage);
+  renderButtons(currentPage, totalPages);
 };
 export const clearInput = () => {
   elements.searchInput.value = "";
 };
 export const clearList = () => {
   elements.resultList.innerHTML = "";
+  elements.pageButtons.innerHTML = "";
 };

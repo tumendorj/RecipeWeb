@@ -13,7 +13,7 @@ class Search {
       this.result = result.data.recipes;
       return this.result;
     } catch (error) {
-      alert("алдаа : " + errors);
+      alert("алдаа : " + error);
     }
   }
 }
